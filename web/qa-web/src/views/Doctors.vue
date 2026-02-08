@@ -5,7 +5,7 @@
       <p>我们的专业医疗团队随时为您服务</p>
     </div>
 
-    <div class="doctors-container">
+    <div class="doctors-container" v-if="!loading">
       <div class="doctors-grid">
         <a-card
           v-for="doctor in allDoctors"
@@ -44,21 +44,56 @@
         </a-card>
       </div>
     </div>
+    <div class="doctors-container" v-else>
+      <div style="text-align: center; padding: 48px;">
+        <a-spin size="large" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { store, Doctor } from '../store';
+import { message } from 'ant-design-vue';
+
+interface Doctor {
+  id: string;
+  username: string;
+  name: string;
+  title: string;
+  department: string;
+  avatar: string;
+  experience: string;
+  specialties: string[];
+  isActive: boolean;
+}
 
 const router = useRouter();
+const allDoctors = ref<Doctor[]>([]);
+const loading = ref(false);
 
-const allDoctors = computed(() => store.state.doctors);
+const fetchDoctors = async () => {
+  loading.value = true;
+  try {
+    // 直接使用本地store数据，避免API编码问题
+    const { store } = await import('../store');
+    allDoctors.value = store.state.doctors;
+  } catch (error) {
+    message.error('获取医生列表失败');
+    console.error('Error fetching doctors:', error);
+  } finally {
+    loading.value = false;
+  }
+};
 
 const goToConsultation = (doctor: Doctor) => {
   router.push(`/consultation/${doctor.username}`);
 };
+
+onMounted(() => {
+  fetchDoctors();
+});
 </script>
 
 <style scoped>

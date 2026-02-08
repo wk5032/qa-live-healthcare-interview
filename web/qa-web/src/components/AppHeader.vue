@@ -8,24 +8,36 @@
       <a-menu v-model:selectedKeys="selectedKeys" mode="horizontal" class="nav-menu">
         <a-menu-item key="home" @click="navigateTo('/')">
           <HomeOutlined />
-          首页
+          {{ t('header.home') }}
         </a-menu-item>
         <a-menu-item key="consultation" @click="navigateTo('/consultation')">
           <MessageOutlined />
-          问诊
+          {{ t('header.consultation') }}
         </a-menu-item>
         <a-menu-item key="doctors" @click="navigateTo('/doctors')">
           <TeamOutlined />
-          医生
+          {{ t('header.doctors') }}
         </a-menu-item>
         <a-menu-item key="about" @click="navigateTo('/about')">
           <InfoCircleOutlined />
-          关于
+          {{ t('header.about') }}
         </a-menu-item>
       </a-menu>
+      <a-dropdown>
+        <template #overlay>
+          <a-menu @click="handleLanguageChange">
+            <a-menu-item key="zh-CN">中文</a-menu-item>
+            <a-menu-item key="en-US">English</a-menu-item>
+          </a-menu>
+        </template>
+        <a-button class="language-btn">
+          <GlobalOutlined />
+          {{ currentLanguage === 'zh-CN' ? '中文' : 'English' }}
+        </a-button>
+      </a-dropdown>
       <a-button type="primary" class="login-btn" @click="navigateTo('/doctor/login')">
         <UserOutlined />
-        医生登录
+        {{ t('header.doctorLogin') }}
       </a-button>
     </div>
   </a-layout-header>
@@ -34,10 +46,12 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { HomeOutlined, MessageOutlined, TeamOutlined, InfoCircleOutlined, UserOutlined } from '@ant-design/icons-vue';
+import { HomeOutlined, MessageOutlined, TeamOutlined, InfoCircleOutlined, UserOutlined, GlobalOutlined } from '@ant-design/icons-vue';
+import { useI18n } from '../locales/i18n';
 
 const router = useRouter();
 const route = useRoute();
+const { t, currentLanguage, setLanguage } = useI18n();
 const selectedKeys = ref<string[]>(['home']);
 
 watch(() => route.path, (newPath) => {
@@ -54,6 +68,10 @@ watch(() => route.path, (newPath) => {
 
 const navigateTo = (path: string) => {
   router.push(path);
+};
+
+const handleLanguageChange = ({ key }: { key: string }) => {
+  setLanguage(key as 'zh-CN' | 'en-US');
 };
 </script>
 
@@ -116,5 +134,12 @@ const navigateTo = (path: string) => {
 .login-btn:hover {
   background: #73d13d;
   border-color: #73d13d;
+}
+
+.language-btn {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 </style>

@@ -1,35 +1,266 @@
-# 面试要求
+# QA Live Healthcare
 
-Fork当前项目到你自己的github账号，并在自己的账号下完成以下操作
+基于 Spring Boot + Vue 3 的在线医疗问诊系统，提供医生信息管理与展示功能。
 
-## 技术要求
+## 项目结构
 
-### 分支要求
+```
+qa-live-healthcare-interview/
+├── server/                          # 后端服务
+│   ├── qa-service-user/             # 用户 & 医生管理微服务
+│   │   ├── src/main/java/com/leansofx/qaserviceuser/
+│   │   │   ├── QaServiceUserApplication.java   # 启动入口
+│   │   │   ├── controller/          # REST 控制器
+│   │   │   ├── service/             # 业务逻辑层
+│   │   │   ├── repository/          # JPA 数据访问层
+│   │   │   ├── entity/              # 数据库实体
+│   │   │   ├── dto/                 # 数据传输对象
+│   │   │   └── config/              # 配置类（CORS、Jackson 等）
+│   │   ├── src/main/resources/
+│   │   │   └── application.properties  # 应用配置
+│   │   └── pom.xml                  # Maven 依赖
+│   ├── qa-service-question/         # 问诊管理微服务（预留）
+│   ├── init.sql                     # 数据库初始化脚本
+│   └── check_db.sql                 # 数据库检查 SQL
+├── web/
+│   └── qa-web/                      # 前端项目
+│       ├── src/
+│       │   ├── views/               # 页面组件
+│       │   │   ├── Home.vue         # 首页
+│       │   │   └── Doctors.vue      # 医生列表页
+│       │   ├── locales/             # 国际化语言资源
+│       │   ├── router/              # 路由配置
+│       │   └── stores/              # 状态管理
+│       ├── package.json
+│       └── vite.config.ts
+├── tests/                           # API 测试脚本
+│   ├── api_test.sh                  # Linux/macOS 测试脚本
+│   └── api_test_windows.bat         # Windows 测试脚本
+├── docs/
+│   └── api.md                       # API 接口文档
+├── docker-compose.yml               # Docker 容器编排
+├── start-backend.bat                # 后端一键启动脚本（Windows）
+├── run_api_tests.bat                # API 测试运行脚本
+├── run_api_tests.ps1                # API 测试运行脚本（PowerShell）
+└── API_TEST.md                      # API 测试说明文档
+```
 
-创建特性分支，自己命名这个分支，在分支内完成以下编码/测试/文档编写过程。并在完成后将分支推送到你自己代码库。
+## 技术栈
 
-### 编码要求
+### 后端
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| Java | 17 | 运行环境 |
+| Spring Boot | 3.5.7 | 核心框架 |
+| Spring Data JPA | - | ORM 数据访问 |
+| MySQL | 8.0 | 关系型数据库 |
+| Maven | - | 构建工具 |
+| Docker Compose | 3.8 | 容器编排 |
 
-1. 给web端的首页添加中英文切换能力，在页面右上角添加语言切换下拉菜单，在用户选择 **中文/English** 选项时动态切换页面显示内容到对应语言。中英文语言资源文件需要保存在 `web/qa-web/src/locales` 目录中。只需要处理首页本身，无需处理其他页面。
-2. 当前应用的数据全部使用json文件的方式在前端项目中存储，请将医生相关的数据使用mysql数据库存储。具体要求如下：
-    - 创建 docker-compose.yml 用于创建mysql数据库，并挂接phpmyadmin作为数据库服务器管理界面
-    - 在 qa-service-user 服务中创建可以支持前端 [医生页面](web/qa-web/src/views/Doctors.vue) 显示医生列表所需要的api
-    - 完成前后端联调
+### 前端
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| Vue | 3.x | 前端框架 |
+| TypeScript | 5.x | 类型安全 |
+| Vite | 5.x | 构建工具 |
+| Ant Design Vue | 4.x | UI 组件库 |
+| Vue Router | 4.x | 前端路由 |
+| Day.js | 1.x | 日期处理 |
 
-### 测试要求
+## 快速开始
 
-1. 使用 curl 构建对于以上医生列表页面的 api 的测试用例脚本
-2. 提供 API_TEST.md 用于说明以上 api 测试的执行
+### 环境要求
 
-### 文档要求
+- **JDK 17** 或以上
+- **Node.js 18** 或以上
+- **Docker Desktop**（用于运行 MySQL）
+- **Maven**（或使用项目自带的 Maven Wrapper）
 
-1. 生成 /docs/api.md 文档，用于对 qa-service-user 服务中的所有api测试进行说明
+### 1. 克隆项目
 
-## 面试流程要求
+```bash
+git clone <your-repo-url>
+cd qa-live-healthcare-interview
+```
 
-针对以上 **技术要求** 部分完成对应的代码编写，测试编写和文档编写；以上所有内容需要全部使用AI Coding提示词的方式完成，不得直接编码（可以对AI生成的代码/文档进行手工调整）。完成以上编码后，基于你的分支创建指向main分支的PR，并发送PR链接。
+### 2. 启动 MySQL 数据库
 
-完成以上代码编写过程后，请联系我并演示你的 AI Coding 编码过程，演示过程中需要你从main分支拉取新的分支，基于新的分支输入提示词，重现整个 编码/测试/文档 的生成过程。
+```bash
+docker-compose up -d
+```
 
-面试时间要求：面试者需要在2天内完成以上面试流程。
-# qa-live-healthcare-interview
+这将启动两个容器：
+- **MySQL 8.0** — 数据库服务，端口 `3307`
+- **phpMyAdmin** — 数据库管理界面，端口 `8081`
+
+> phpMyAdmin 访问地址：http://localhost:8081
+> 用户名：`qa_user`，密码：`qa_password`
+
+数据库初始化脚本 `server/init.sql` 会在容器首次启动时自动执行，创建 `doctors` 表并插入 5 条初始医生数据。
+
+### 3. 启动后端服务
+
+**Windows：**
+
+双击运行 `start-backend.bat`，或在命令行中：
+
+```bash
+cd server\qa-service-user
+mvnw.cmd spring-boot:run
+```
+
+**Linux / macOS：**
+
+```bash
+cd server/qa-service-user
+./mvnw spring-boot:run
+```
+
+后端服务启动后访问地址：`http://localhost:8080`
+
+### 4. 启动前端项目
+
+```bash
+cd web/qa-web
+npm install
+npm run dev
+```
+
+前端开发服务器默认运行在 `http://localhost:5173`
+
+### 5. 运行 API 测试
+
+```bash
+# Windows
+run_api_tests.bat
+
+# 或使用 PowerShell
+run_api_tests.ps1
+
+# Linux / macOS
+cd tests && ./api_test.sh
+```
+
+## API 接口
+
+所有接口基础路径：`http://localhost:8080/api`
+
+### 医生管理
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/doctors` | 获取所有医生列表 |
+| GET | `/api/doctors/active` | 获取活跃医生列表 |
+| GET | `/api/doctors/{id}` | 根据 ID 获取医生详情 |
+| GET | `/api/doctors/username/{username}` | 根据用户名获取医生 |
+| POST | `/api/doctors` | 创建新医生 |
+| PUT | `/api/doctors/{id}` | 更新医生信息 |
+| DELETE | `/api/doctors/{id}` | 删除医生 |
+| GET | `/api/doctors/health` | 医生接口健康检查 |
+
+### 系统端点
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/test` | 基础连通性测试 |
+| GET | `/api/test/cors` | CORS 跨域测试 |
+| GET | `/actuator/health` | 应用健康检查 |
+| GET | `/actuator/info` | 应用信息 |
+
+### 统一响应格式
+
+```json
+{
+  "code": 200,
+  "message": "Success",
+  "data": { ... },
+  "timestamp": "2026-02-08T12:00:00"
+}
+```
+
+详细 API 文档请参阅 [docs/api.md](docs/api.md)。
+
+## 数据库
+
+### 连接信息
+
+| 配置项 | 值 |
+|--------|-----|
+| 主机 | localhost |
+| 端口 | 3307 |
+| 数据库 | qa_healthcare |
+| 用户名 | qa_user |
+| 密码 | qa_password |
+| 字符集 | utf8mb4 |
+
+### doctors 表结构
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | VARCHAR(50) | 主键，医生 ID |
+| username | VARCHAR(50) | 唯一，登录用户名 |
+| password | VARCHAR(100) | 密码 |
+| name | VARCHAR(100) | 姓名 |
+| title | VARCHAR(50) | 职称 |
+| department | VARCHAR(50) | 科室 |
+| avatar | TEXT | 头像 URL |
+| experience | VARCHAR(100) | 从业经验 |
+| specialties | JSON | 专业特长列表 |
+| is_active | BOOLEAN | 是否活跃 |
+| created_at | TIMESTAMP | 创建时间 |
+| updated_at | TIMESTAMP | 更新时间 |
+
+## 前端页面
+
+| 路由 | 页面 | 说明 |
+|------|------|------|
+| `/` | Home | 首页，支持中英文切换 |
+| `/doctors` | Doctors | 医生列表，从后端 API 获取数据 |
+
+首页右上角提供语言切换下拉菜单，支持中文 / English 动态切换。
+
+## 常用命令
+
+```bash
+# 启动 Docker 服务
+docker-compose up -d
+
+# 查看 Docker 容器状态
+docker-compose ps
+
+# 查看数据库日志
+docker logs qa-healthcare-mysql
+
+# 停止并移除 Docker 容器
+docker-compose down
+
+# 后端 Maven 打包
+cd server/qa-service-user
+./mvnw clean package
+
+# 前端构建
+cd web/qa-web
+npm run build
+```
+
+## 故障排查
+
+### 数据库连接失败
+
+1. 确认 Docker 容器正在运行：`docker ps`
+2. 检查端口是否被占用：`netstat -ano | findstr 3307`
+3. 查看容器日志：`docker logs qa-healthcare-mysql`
+
+### 后端启动报错
+
+1. 确认 JDK 17 已安装：`java -version`
+2. 确认 MySQL 容器已启动并正常运行
+3. 查看后端控制台日志中的具体错误信息
+
+### 前端调用 API 跨域问题
+
+后端已配置全局 CORS，允许所有来源访问。如果仍然出现跨域问题，请检查后端是否正常运行在 `8080` 端口。
+
+## 许可证
+
+本项目仅用于学习与演示目的。

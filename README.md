@@ -210,14 +210,26 @@ cd tests && ./api_test.sh
 | created_at | TIMESTAMP | 创建时间 |
 | updated_at | TIMESTAMP | 更新时间 |
 
+## 页面截图
+
+### 首页
+
+![首页](docs/screenshots/homepage.png)
+
+首页展示医疗问诊平台入口，右上角提供语言切换下拉菜单，支持中文 / English 动态切换。
+
+### 医生列表
+
+![医生列表](docs/screenshots/doctors.png)
+
+医生列表从后端 MySQL 数据库获取数据，展示医生的姓名、职称、科室、专业特长等信息。
+
 ## 前端页面
 
 | 路由 | 页面 | 说明 |
 |------|------|------|
 | `/` | Home | 首页，支持中英文切换 |
 | `/doctors` | Doctors | 医生列表，从后端 API 获取数据 |
-
-首页右上角提供语言切换下拉菜单，支持中文 / English 动态切换。
 
 ## 常用命令
 
